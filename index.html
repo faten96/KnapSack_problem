@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="fr-FR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Travail pratique num 1 du module 2CS-TPGO">
+  	<meta name="keywords" content="HTML, CSS, JavaScript, programmation dynamique">
+  	<meta author="Bouroudi Abdelmounaim">
+  	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>TP 1 du module 2CS-TPGO</title>
+    <!--[if lt IE 9]>
+  	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  	<![endif]-->
+  	<!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- /Start your project here-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <br/>
+                <h1>TP du problème de sac a dos</h1>
+                <br/>
+                <p> Dans ce TP le problème consiste à developper un algorithme qui permet de maximiser le gain apporté par des objets en ne dépassant pas la capacité max du sac à dos. </p>
+                <hr/>
+
+                <!--Panel-->
+                <div class="card" style="margin-top: 30px">
+                    <h3 class="card-header primary-color white-text">Introduire les objets ici </h3>
+                    <div class="card-body">
+
+                        <form  style="padding-top: 20px">
+                            <div id="dynamic_field">
+                                <div class="form-inline" id="line0">
+                                    <div class="md-form form-group">
+                                        <input type="text" class="form-control" name="namebject" required="on">
+                                        <label for="namebject" >Objet: </label>
+                                    </div>
+                                    <div class="md-form form-group">
+                                        <input type="number" min="0" class="form-control" name="weight" required="on">
+                                        <label for="weight" >Pois (kg) : </label>
+                                    </div>
+                                    <div class="md-form form-group">
+                                        <input type="number" min="0" class="form-control" name="value" required="on">
+                                        <label for="value">Valeur ($) : </label>
+                                    </div>
+                                    <div class="text-center form-group">
+                                        <button type="button" id="add" name="add" class="btn btn-default">Ajouter</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md-form form-group" style="margin-top: 20px">
+                                <input type="number" class="form-group" name="max_poids" id="max_poids" required="on" value="0">
+                                <label for="max_poids">Poids maximal du sac (kg) :</label>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submit">
+                                Calculer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <button type="button" style="display: none;" class="btn btn-primary" id="result_modal" data-toggle="modal" data-target="#centralModalSuccess">
+                    Modal Show
+                </button>
+                <!-- Central Modal Medium Success -->
+                <div class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-notify modal-success modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <p class="heading lead">Résultat obtenu</p>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" class="white-text">&times;</span>
+                                </button>
+                            </div>
+
+                            <!--Body-->
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                                    <h4 id="max_result"></h4>
+                                    <div class="card">
+                                        <div class="card-body">
+
+
+                                            <table class="table table-striped">
+                                                <!--Table head-->
+                                                <thead class="mdb-color">
+                                                  <tr class="text-white">
+                                                    <th>#</th>
+                                                    <th>Objet</th>
+                                                    <th>Poids (kg)</th>
+                                                    <th>Valeur ($)</th>
+                                                  </tr>
+                                                </thead>
+                                                <!--Table head-->
+
+                                                <!--Table body-->
+                                                <tbody id="tbody">
+
+                                                </tbody>
+                                                <!--Table body-->
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Footer-->
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-outline-success waves-effect" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                        <!--/.Content-->
+                    </div>
+                </div>
+                <!-- Central Modal Medium Success-->
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+</body>
+<script>
+    $(document).ready(function(){
+        var i=1;
+        $('#add').click(function () {
+            i++;
+            console.log('add');
+            $("#dynamic_field").append('<div id="line'+i+'" class="form-inline"><div class="md-form form-group"><input type="text" class="form-control" name="namebject" required="on"> <label for="namebject" >Objet: </label> </div> <div class="md-form form-group"> <input type="number" class="form-control" name="weight" required="on"> <label for="weight" >Pois (kg) : </label> </div> <div class="md-form form-group"> <input type="number" class="form-control" name="value" required="on"><label for="value">Valeur ($) :</label></div> <div class="text-center form-group"> <button type="button" id="'+i+'" name="delete" class="btn btn-outline-danger btn_remove">X</button> </div></div>');
+        });
+        $(document).on('click',".btn_remove", function () {
+            var button_id = $(this).attr('id');
+            $("#line"+button_id).remove();
+        });
+        $(document).on('click', '#submit', function () {
+            var tab = $("div.form-inline");
+            var max_weight = $("#max_poids").val();
+            var objets = [];
+            for (i=0;i<tab.length;i++) {
+                objets[i] = $("div#"+tab[i].id+" input.form-control");
+            }
+
+            var mat = [];
+            for (i=0;i<tab.length;i++) {
+                mat[i] = [max_weight+1];
+            }
+
+            for(var j=0;j<=max_weight;j++) {
+                if (objets[0][1].value > j) {
+                    mat[0][j] = 0;
+                }else {
+                    mat[0][j] = Number(objets[0][2].value);
+                }
+            }
+
+            for (var i=1;i<objets.length;i++) {
+                for(var j=0;j<=max_weight;j++) {
+                    if (objets[i][1].value > j) {
+                        mat[i][j] = mat[i-1][j];
+                    }else {
+                        mat[i][j] = Math.max(mat[i-1][j],mat[i-1][j-(Number(objets[i][1].value))]+Number(objets[i][2].value));
+                    }
+                }
+            }
+
+            var last_line = objets.length-1;
+            var k = max_weight;
+            while (mat[last_line ][k] == mat[last_line][k-1]){
+                k--;
+            }
+            var max_result = (mat[last_line][k]);
+            var sac = [];
+            var s = 0;
+            var i = last_line;
+            while(k > 0){
+                while (i>0  &&  mat[i][k] == mat[i-1][k]) {
+                    i--;
+                }
+                k = k - Number(objets[i][1].value);
+                if (k >= 0) {
+                    sac[s] = objets[i];
+                    s++;
+                }
+                i--;
+            }
+
+            document.getElementById("result_modal").click();
+            $("#max_result").empty();
+            $("#max_result").append('La valeur maximale à mettre dans le sac est : '+max_result+' DA');
+            var cpt=0;
+            $("#tbody").empty();
+            for (var i = sac.length-1;i>=0;i--){
+                $("#tbody").append('<tr><th scope="row">'+cpt+'</th><td>'+sac[i][0].value+'</td><td>'+sac[i][1].value+'</td><td>'+sac[i][2].value+'</td></tr>');
+            }
+        });
+    })
+</script>
+</html>
